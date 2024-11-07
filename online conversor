@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR com Tesseract.js</title>
+</head>
+<body>
+    <h1>Conversão de Imagem para Texto</h1>
+    <input type="file" id="imagem" accept="image/*">
+    <button onclick="converterImagemParaTexto()">Converter</button>
+    <p id="resultado"></p>
+
+    <!-- Script do Tesseract.js -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script>
+        function converterImagemParaTexto() {
+            const imagem = document.getElementById('imagem').files[0];
+            if (!imagem) {
+                alert('Por favor, selecione uma imagem!');
+                return;
+            }
+
+            // Exibe a mensagem enquanto o OCR processa
+            document.getElementById('resultado').innerText = 'Processando imagem...';
+
+            // Tesseract.js: Executa o OCR
+            Tesseract.recognize(
+                imagem,
+                'por',  // Idioma português
+                { logger: m => console.log(m) }  // Log de progresso opcional
+            ).then(({ data: { text } }) => {
+                document.getElementById('resultado').innerText = text;  // Exibe o texto extraído
+            }).catch(error => {
+                console.error(error);
+                document.getElementById('resultado').innerText = 'Erro ao processar a imagem.';
+            });
+        }
+    </script>
+</body>
+</html>
